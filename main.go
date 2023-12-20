@@ -1,18 +1,17 @@
-
 package main
 
 import (
+	"bytes"
 	"database/sql"
 	"fmt"
 	"html/template"
 	"log"
-	"bytes"
 	"net/http"
+
 	"github.com/gin-gonic/gin"
 
 	_ "github.com/go-sql-driver/mysql"
 )
-
 
 //PrivacyPolicy represents the data structure for the privacy policy
 
@@ -33,7 +32,7 @@ type TemplateData struct {
 	Template      string
 }
 
-//Database connection parameters
+// Database connection parameters
 const (
 	dbDriver   = "mysql"
 	dbUser     = "root"
@@ -55,8 +54,7 @@ CREATE TABLE IF NOT EXISTS privacy_policies (
 );
 `
 
-
-//Insert a privacy policy into the database
+// Insert a privacy policy into the database
 const insertQuery = `
 INSERT INTO privacy_policies (company_name, email, website, country, registration_number, address)
 VALUES (?, ?, ?, ?, ?, ?);
@@ -70,21 +68,27 @@ SELECT * FROM privacy_policies WHERE id = ?;
 
 const (
 	NDPRTemplate = `
+{{define "base"}}
 	{{.PrivacyPolicy.CompanyName}} NDPR Compliant Privacy Policy
 	...
+{{end}}
 	`
 
-    GDPRTemplate = `
+	GDPRTemplate = `
+{{define "base"}}
 	{{.PrivacyPolicy.CompanyName}} GDPR Compliant Privacy Policy
 	...
+{{end}}
 	`
 
 	CCPATemplate = `
+{{define "base"}}
 	{{.PrivacyPolicy.CompanyName}} CCPA Compliant Privacy Policy
 	...
+{{end}}
 	`
-)
 
+)
 
 func main() {
 	//open a database connection
@@ -105,7 +109,7 @@ func main() {
 
 	//Set up a route to handle the web interface
 	router.LoadHTMLGlob("templates/*")
-	router.GET("/", func(c * gin.Context) {
+	router.GET("/", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "index.html", nil)
 	})
 
@@ -117,15 +121,14 @@ func main() {
 			return
 		}
 
-// Insert the privacy policy into the database
+		// Insert the privacy policy into the database
 		result, err := db.Exec(insertQuery, data.CompanyName, data.Email, data.Website, data.Country, data.RegistrationNumber, data.Address)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
 
-
-        // Retrive the inserted privacy policy by ID
+		// Retrive the inserted privacy policy by ID
 		lastInsertID, _ := result.LastInsertId()
 		retrievedPolicy := PrivacyPolicy{}
 		err = db.QueryRow(selectQuery, lastInsertID).Scan(
@@ -143,8 +146,7 @@ func main() {
 			return
 		}
 
-
-        ndprTemplate := template.Must(template.New("NDPR").Parse(NDPRTemplate))
+		ndprTemplate := template.Must(template.New("NDPR").Parse(NDPRTemplate))
 		gdprTemplate := template.Must(template.New("GDPR").Parse(GDPRTemplate))
 		ccpaTemplate := template.Must(template.New("CCPA").Parse(CCPATemplate))
 
@@ -167,13 +169,13 @@ func main() {
 	router.Run(":8080")
 }
 
-
 func renderTemplate(tmpl *template.Template, data PrivacyPolicy) string {
 	var result bytes.Buffer
 	templateData := TemplateData{
 		PrivacyPolicy: data,
-		Template:            "Generated Privacy Policy:",
+		Template:      "Generated Privacy Policy:",
 	}
+	//tmpl, err := template.New("").ParseFiles("base.html")
 	err := tmpl.ExecuteTemplate(&result, "base", templateData)
 	if err != nil {
 		log.Fatal(err)
