@@ -7,9 +7,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
-
 	"github.com/gin-gonic/gin"
-
 	_ "github.com/go-sql-driver/mysql"
 )
 
@@ -67,27 +65,9 @@ SELECT * FROM privacy_policies WHERE id = ?;
 //Privacy Policy templates
 
 const (
-	NDPRTemplate = `
-{{define "base"}}
-	{{.PrivacyPolicy.CompanyName}} NDPR Compliant Privacy Policy
-	...
-{{end}}
-	`
-
-	GDPRTemplate = `
-{{define "base"}}
-	{{.PrivacyPolicy.CompanyName}} GDPR Compliant Privacy Policy
-	...
-{{end}}
-	`
-
-	CCPATemplate = `
-{{define "base"}}
-	{{.PrivacyPolicy.CompanyName}} CCPA Compliant Privacy Policy
-	...
-{{end}}
-	`
-
+NDPRFileName = "ndpr.html"
+GDPRFileName = "gdpr.html"
+CCPAFileName = "ccpa.html"
 )
 
 func main() {
@@ -146,9 +126,9 @@ func main() {
 			return
 		}
 
-		ndprTemplate := template.Must(template.New("NDPR").Parse(NDPRTemplate))
-		gdprTemplate := template.Must(template.New("GDPR").Parse(GDPRTemplate))
-		ccpaTemplate := template.Must(template.New("CCPA").Parse(CCPATemplate))
+		ndprTemplate := loadTemplate("NDPR", NDPRFileName)
+		gdprTemplate := loadTemplate("GDPR", GDPRFileName)
+		ccpaTemplate := loadTemplate("CCPA", CCPAFileName)
 
 		renderedPolicies := map[string]string{
 			"NDPR": renderTemplate(ndprTemplate, retrievedPolicy),
@@ -182,4 +162,13 @@ func renderTemplate(tmpl *template.Template, data PrivacyPolicy) string {
 	}
 	resultString := result.String()
 	return resultString
+}
+
+
+func loadTemplate(name, fileName string) *template.Template {
+	tmpl, err := template.New(name).ParseFiles("templates/base.html", "templates/"+fileName)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return tmpl
 }
