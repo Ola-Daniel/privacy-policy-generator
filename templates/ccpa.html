@@ -1,4 +1,15 @@
+<!-- templates/ccpa.html -->
 {{define "base"}}
-	{{.PrivacyPolicy.CompanyName}} CCPA Compliant Privacy Policy
-	...
+    <h2>{{.PrivacyPolicy.CompanyName}} CCPA Compliant Privacy Policy</h2>
+    <p>This privacy policy outlines the rights and disclosures required by the California Consumer Privacy Act (CCPA) for residents of California.</p>
+    <p>{{.PrivacyPolicy.CompanyName}} values your privacy and is dedicated to providing you with control over your personal information.</p>
+    <p>We collect and use your personal data for the purposes disclosed in this policy and with your consent.</p>
+    <p>You have the right to know what personal information we collect and how it is used and shared.</p>
+    <p>We do not sell your personal information, and we provide you the right to opt-out of the sale of your data.</p>
+    <p>You may request the deletion of your personal information, subject to certain exceptions under the CCPA.</p>
+    <p>We do not discriminate against you for exercising your rights under the CCPA.</p>
+    <p>If you have any questions or concerns, please contact our Privacy Office.</p>
+    <p>This policy is effective as of the date stated and may be updated in response to legal or business changes.</p>
+    <p>Thank you for choosing {{.PrivacyPolicy.CompanyName}}.</p>
+    <!-- Add more CCPA-specific content here -->
 {{end}}
