@@ -1,0 +1,1 @@
+My lazy attempt to build a free and open-source privacy policy generator in golang
