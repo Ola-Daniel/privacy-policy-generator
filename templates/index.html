@@ -1,27 +1,89 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Privacy Policy Generator</title>
-    </head>
-    <body>
-        <h1>Privacy Policy Generator</h1>
-        <form action="/generate" method="post">
-            <label form="companyName">Company Name:</label>
-            <input type="text" name="CompanyName" id="companyName" required><br>
-            <label for="email">Email:</label>
-            <input type="email" name="Email" id="email" required><br>
-            <label for="website">Website:</label>
-            <input type="url" name="Website" id="website" required><br>
-            <label for="country">Country:</label>
-            <input type="text" name="Country" id="country" required><br>
-            <label for="registrationNumber">Registration Number:</label>
-            <input type="text" name="RegistrationNumber" id="registrationNumber" required><br>
-            <label for="address">Address:</label>
-            <textarea name="Address" id="address" required></textarea><br>
-            <input type="submit" value="Generate Privacy Policy">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy Generator</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f7f7f7;
+            text-align: center;
+            margin: 50px;
+        }
 
-        </form>
-    </body>
+        h1 {
+            color: #333;
+        }
+
+        form {
+            max-width: 400px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            text-align: left;
+            margin-top: 10px;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        input[type="submit"] {
+            background-color: #4caf50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>Privacy Policy Generator</h1>
+    <form action="/generate" method="post">
+        <label for="companyName">Company Name:</label>
+        <input type="text" name="CompanyName" id="companyName" required><br>
+        
+        <label for="email">Email:</label>
+        <input type="email" name="Email" id="email" required><br>
+        
+        <label for="website">Website:</label>
+        <input type="url" name="Website" id="website" required><br>
+        
+        <label for="country">Country:</label>
+        <input type="text" name="Country" id="country" required><br>
+        
+        <label for="registrationNumber">Registration Number:</label>
+        <input type="text" name="RegistrationNumber" id="registrationNumber" required><br>
+        
+        <label for="address">Address:</label>
+        <textarea name="Address" id="address" rows="4" required></textarea><br>
+        <label for="policySelect">Select Policy:</label>
+            <select id="policySelect" name="PolicyType" required>
+                <option value="NDPR">NDPR Compliant Privacy Policy</option>
+                <option value="GDPR">GDPR Compliant Privacy Policy</option>
+                <option value="CCPA">CCPA Compliant Privacy Policy</option>
+            </select>
+        
+        <input type="submit" value="Generate Privacy Policy">
+    </form>
+</body>
 </html>

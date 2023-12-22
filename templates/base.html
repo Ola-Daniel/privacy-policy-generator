@@ -1,14 +1,37 @@
 <!-- templates/base.html -->
-{{define "base"}}
+{{define "header"}}
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>{{.Template}}</title>
-    </head>
-    <body>
-        {{template "content" .}}
-    </body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.Title}}</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f7f7f7;
+            text-align: center;
+            margin: 50px;
+        }
+
+        h1, h2 {
+            color: #333;
+        }
+
+        p {
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <h1>{{.CompanyName}}</h1>
+    <h2>{{.Title}}</h2>
+{{end}}
+
+{{define "footer"}}
+    <footer style="margin-top: 20px;">
+        <p>&copy; 2023 {{.CompanyName}}. All rights reserved.</p>
+    </footer>
+</body>
 </html>
 {{end}}
