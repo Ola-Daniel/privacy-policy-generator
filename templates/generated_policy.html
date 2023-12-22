@@ -1,0 +1,10 @@
+<!-- templates/generated_policy.html -->
+{{define "content"}}
+    <div style="text-align: center; padding: 50px;">
+        <h1>Generated Privacy Policy:</h1>
+        {{.Policy | html}} <!-- Use safe to render HTML content -->
+    </div>
+{{end}}
+
+
+
