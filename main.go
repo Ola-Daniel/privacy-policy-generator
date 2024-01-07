@@ -136,7 +136,7 @@ func main() {
 			"CCPA": renderTemplate(ccpaTemplate, retrievedPolicy),
 		}
 
-		c.HTML(http.StatusOK, "generated_policies.html", gin.H{
+		c.HTML(http.StatusOK, "generated_policy.html", gin.H{
 			"Policies": map[string]string{
 				"NDPR": renderedPolicies["NDPR"],
 				"GDPR": renderedPolicies["GDPR"],

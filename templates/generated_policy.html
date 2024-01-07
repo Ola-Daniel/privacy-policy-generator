@@ -1,10 +1,36 @@
-<!-- templates/generated_policy.html -->
-{{define "content"}}
-    <div style="text-align: center; padding: 50px;">
-        <h1>Generated Privacy Policy:</h1>
-        {{.Policy | html}} <!-- Use safe to render HTML content -->
-    </div>
-{{end}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generated Privacy Policy</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #ffffff;
+            text-align: center;
+            margin: 50px;
+        }
 
+        h1, h2 {
+            color: #3a0a0a;
+        }
 
+        p {
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <h1>Generated Privacy Policy:</h1>
+    {{range $policy,
+    $content := .Policies}}
+    <h2>{{$policy}}</h2>
+    <pre>{{$content}}</pre>
+    {{end}}
 
+    <footer style="margin-top: 20px;">
+        <p>&copy; <script>document.write(new Date().getFullYear())</script> Daniel Ola-Olorun. All rights reserved.</p>
+    </footer>
+</body>
+</html>
