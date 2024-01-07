@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
+
 )
 
 //PrivacyPolicy represents the data structure for the privacy policy
@@ -159,6 +160,7 @@ func renderTemplate(tmpl *template.Template, data PrivacyPolicy) string {
 		log.Fatal(err)
 	}
 	resultString := result.String()
+	log.Printf("Generated HTML: %v", resultString)
 	return resultString
 }
 

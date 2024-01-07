@@ -1,11 +1,11 @@
 <!-- templates/base.html -->
 {{define "base"}}
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{.Title}}</title>
+    <title>{{template "title" .}} - Testing Testing Testing</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -15,21 +15,21 @@
         }
 
         h1, h2 {
-            color: #333;
+            color: #322efe;
         }
 
         p {
-            color: #666;
+            color: #810909;
         }
     </style>
 </head>
 <body>
-    <h1>{{.CompanyName}}</h1>
-    <h2>{{.Title}}</h2>
-{{template "content" .}}
-    <footer style="margin-top: 20px;">
-        <p>&copy; 2024 {{.CompanyName}}. All rights reserved.</p>
-    </footer>
+  <!--  <h1>{{.CompanyName}}</h1>   --> 
+   <!-- <h2>{{.Title}}</h2>    --> 
+  {{template "content" .}} 
+<footer style="margin-top: 20px;">
+    <p>&copy; <script>document.write(new Date().getFullYear())</script> Daniel Ola-Olorun. All rights reserved.</p>
+</footer>
 </body>
 </html>
 {{end}}
