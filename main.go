@@ -126,23 +126,39 @@ func main() {
 			return
 		}
 
-		ndprTemplate := loadTemplate("NDPR", NDPRFileName)
-		gdprTemplate := loadTemplate("GDPR", GDPRFileName)
-		ccpaTemplate := loadTemplate("CCPA", CCPAFileName)
+
+		selectedPolicyType := c.PostForm("PolicyType")
 
 		renderedPolicies := map[string]string{
-			"NDPR": renderTemplate(ndprTemplate, retrievedPolicy),
-			"GDPR": renderTemplate(gdprTemplate, retrievedPolicy),
-			"CCPA": renderTemplate(ccpaTemplate, retrievedPolicy),
+			selectedPolicyType: renderTemplate(loadTemplate(selectedPolicyType, selectedPolicyType+".html"), retrievedPolicy),
 		}
+		
+
 
 		c.HTML(http.StatusOK, "generated_policy.html", gin.H{
-			"Policies": map[string]string{
-				"NDPR": renderedPolicies["NDPR"],
-				"GDPR": renderedPolicies["GDPR"],
-				"CCPA": renderedPolicies["CCPA"],
-			},
+			"SelectedPolicy": selectedPolicyType,
+			"PolicyContent": renderedPolicies[selectedPolicyType],
 		})
+
+
+
+		//ndprTemplate := loadTemplate("NDPR", NDPRFileName)
+		//gdprTemplate := loadTemplate("GDPR", GDPRFileName)
+		//ccpaTemplate := loadTemplate("CCPA", CCPAFileName)
+
+		//renderedPolicies := map[string]string{
+		//	"NDPR": renderTemplate(ndprTemplate, retrievedPolicy),
+		//	"GDPR": renderTemplate(gdprTemplate, retrievedPolicy),
+		//	"CCPA": renderTemplate(ccpaTemplate, retrievedPolicy),
+		//}
+
+		//c.HTML(http.StatusOK, "generated_policy.html", gin.H{
+		//	"Policies": map[string]string{
+		//		"NDPR": renderedPolicies["NDPR"],
+		//		"GDPR": renderedPolicies["GDPR"],
+		//		"CCPA": renderedPolicies["CCPA"],
+		//	},
+		//})
 	})
 
 	//Run the web server
@@ -155,7 +171,7 @@ func renderTemplate(tmpl *template.Template, data PrivacyPolicy) string {
 		PrivacyPolicy: data,
 		Template:      "Generated Privacy Policy:",
 	}
-	//tmpl, err := template.New("").ParseFiles("base.html")
+	
 	err := tmpl.ExecuteTemplate(&result, "base", templateData)
 	if err != nil {
 		log.Fatal(err)
