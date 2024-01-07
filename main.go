@@ -141,24 +141,6 @@ func main() {
 		})
 
 
-
-		//ndprTemplate := loadTemplate("NDPR", NDPRFileName)
-		//gdprTemplate := loadTemplate("GDPR", GDPRFileName)
-		//ccpaTemplate := loadTemplate("CCPA", CCPAFileName)
-
-		//renderedPolicies := map[string]string{
-		//	"NDPR": renderTemplate(ndprTemplate, retrievedPolicy),
-		//	"GDPR": renderTemplate(gdprTemplate, retrievedPolicy),
-		//	"CCPA": renderTemplate(ccpaTemplate, retrievedPolicy),
-		//}
-
-		//c.HTML(http.StatusOK, "generated_policy.html", gin.H{
-		//	"Policies": map[string]string{
-		//		"NDPR": renderedPolicies["NDPR"],
-		//		"GDPR": renderedPolicies["GDPR"],
-		//		"CCPA": renderedPolicies["CCPA"],
-		//	},
-		//})
 	})
 
 	//Run the web server
