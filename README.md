@@ -3,27 +3,27 @@ Privacy Policy Generator
 
 
 
-- What is a privacy policy?
-
+What is a privacy policy?
+-------------------------
 A privacy policy is a document that explains how a website or an app collects, uses, and shares personal data from its users. 
 
 
 
 
-- What is Personal Data?
-
+What is Personal Data?
+----------------------
 Personal data is any information that can identify a person, such as name, email, address, phone number, etc. 
 
 
 
 
-- When is a privacy policy required?
-
+When is a privacy policy required?
+----------------------------------
 A privacy policy is required by law in many countries and regions, such as Nigeria, the US, and the EU, to protect the privacy rights of the users and to comply with regulations. It is also required during the registration of apps on Apple's App Store and Google's PlayStore.
 
 
-- How does the Privacy Policy Generator work?
-
+How does the Privacy Policy Generator work?
+-------------------------------------------
 The Privacy Policy Generator is a tool that helps you create a customized privacy policy for your website or app in a few minutes. You just need to answer some questions about your website or app, such as what personal data you collect, how you use it, who you share it with, and what rights your users have. The Privacy Policy Generator will then generate a privacy policy that complies with the relevant laws and regulations and matches your needs and preferences.
 
 
