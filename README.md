@@ -33,11 +33,12 @@ Features
 
 - Straightforward and adaptable output
 - Get what you need, easy and fast
+- Download as PDF or get a web link, you choose.
 
 Installation
 ------------
 
-This project is delivered as a Software-as-a-Service which can be accessed here https://danieloo.com/privacy-policy-generator , however you can also roll out and selfhost your own instance as we provide pre-built container images via the Docker Registry Hub. 
+This project is delivered as a Software-as-a-Service @ https://danieloo.com/privacy-policy-generator , however you can also roll out and selfhost your own instance as we provide pre-built container images via the Docker Registry Hub. 
 
 Contribute
 ----------
