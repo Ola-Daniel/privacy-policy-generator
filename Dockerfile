@@ -9,4 +9,4 @@ RUN go build .
 
 EXPOSE 8080
 
-ENTRYPOINT [""]
+ENTRYPOINT ["main.go"]
