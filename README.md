@@ -19,7 +19,7 @@ Personal data is any information that can identify a person, such as name, email
 
 When is a privacy policy required?
 ----------------------------------
-A privacy policy is required by law in many countries and regions, such as Nigeria, the US, and the EU, to protect the privacy rights of the users and to comply with regulations. It is also required during the registration of apps on Apple's App Store and Google's PlayStore.
+A privacy policy is required by law in many countries and regions, such as Nigeria, Ghana, The European Union, and the US to protect the privacy rights of the users and to comply with regulations. It is also required during the registration of apps on Apple's App Store and Google's PlayStore.
 
 
 How does the Privacy Policy Generator work?
@@ -31,14 +31,24 @@ The Privacy Policy Generator is a tool that helps you create a customized privac
 Features
 --------
 
-- Straightforward and adaptable output
+- Straightforward and adaptable content.
 - Get what you need, easy and fast
-- Download as PDF or get a web link, you choose.
+- Download as a PDF or get a web link, you choose.
 
 Installation
 ------------
 
 This project is delivered as a Software-as-a-Service @ https://danieloo.com/privacy-policy-generator , however you can also roll out and selfhost your own instance as we provide pre-built container images via the Docker Registry Hub. 
+
+
+
+Roadmap
+-------
+
+
+- View/Download PDF
+- Get Unique link 
+- 
 
 Contribute
 ----------
@@ -50,7 +60,7 @@ Support
 -------
 
 If you are having issues, please let me know.
-I can be reached over email at: redacted
+I can be reached over email at: redacted or Twitter @ https://twitter.com/horla_dan 
 
 Disclaimer
 ----------
