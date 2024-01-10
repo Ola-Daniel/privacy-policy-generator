@@ -60,7 +60,7 @@ Support
 -------
 
 If you are having issues, please let me know.
-I can be reached over email at: redacted or Twitter @ https://twitter.com/horla_dan 
+I can be reached on Twitter @ https://twitter.com/horla_dan 
 
 Disclaimer
 ----------
