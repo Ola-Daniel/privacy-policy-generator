@@ -99,6 +99,36 @@ func main() {
 	router.GET("/", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "index.tmpl", nil)
 	})
+    
+	router.GET("/download-pdf", func(c *gin.Context) {
+		//selectedPolicyType := c.Query("policyType")
+		//retrievedPolicy := PrivacyPolicy{} //Fetch the policy based on the type
+
+		//Load the template and render the HTML content
+		//htmlContent := renderTemplate(loadTemplate(selectedPolicyType, selectedPolicyType+".tmpl"), retrievedPolicy)
+		//create a New PDF document
+        //
+		//Add HTML content to the PDF
+		//
+		//Set up the HTTP response headers
+        //c.Header("Content-Disposition", fmt.Sprintf("attachment; filename=%s_privacy_policy.pdf", selectedPolicyType))
+        //c.Header("Content-Type", "application/pdf")
+
+		//Write the PDF content to the response
+		//err := pdf.Output(c.Writer)            
+		//if err != nil {
+		//	log.Fatal(err)
+		//}
+
+		//c.Status(http.StatusOK)
+
+
+
+	})
+
+	router.GET("/get-link", func(c *gin.Context) {
+		//Link Creation implementation
+	})
 
 	router.POST("/generate", func(c *gin.Context) {
 		//Parse form data
