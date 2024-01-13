@@ -7,86 +7,144 @@
     <style>
         body {
             font-family: 'Arial', sans-serif;
-            background-color: #f7f7f7;
+            background-color: #f0f0f0;
             text-align: center;
             margin: 50px;
         }
 
         h1 {
             color: #333;
+            font-size: 36px;
+            margin-bottom: 20px;
         }
 
         form {
-            max-width: 400px;
+            max-width: 600px;
             margin: 0 auto;
-            background-color: #fff;
-            padding: 20px;
+            background-color: #ffffff;
+            padding: 30px;
             border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
         label {
             display: block;
             text-align: left;
-            margin-top: 10px;
+            margin-top: 15px;
+            font-size: 16px;
+            color: #555;
         }
 
         input,
-        textarea {
+        textarea,
+        select {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             margin-top: 5px;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
             box-sizing: border-box;
             border: 1px solid #ccc;
             border-radius: 4px;
+            font-size: 16px;
+        }
+
+        select {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background: url('https://img.icons8.com/material-outlined/24/000000/down-arrow.png') no-repeat right #fff;
+            background-size: 20px;
+            padding-right: 40px;
         }
 
         input[type="submit"] {
-            background-color: #4caf50;
-            color: white;
-            padding: 10px 15px;
+            background-color: #3498db;
+            color: #fff;
+            padding: 15px;
             border: none;
             border-radius: 4px;
             cursor: pointer;
+            font-size: 18px;
         }
 
         input[type="submit"]:hover {
-            background-color: #45a049;
+            background-color: #2980b9;
+        }
+
+        footer {
+            margin-top: 20px;
+            color: #777;
         }
     </style>
 </head>
 <body>
     <h1>Privacy Policy Generator</h1>
     <form action="/generate" method="post">
+    <h2>Basic Information:</h2>
         <label for="companyName">Company Name:</label>
-        <input type="text" name="CompanyName" id="companyName" required><br>
-        
-        <label for="email">Email:</label>
-        <input type="email" name="Email" id="email" required><br>
-        
-        <label for="website">Website:</label>
-        <input type="url" name="Website" id="website" required><br>
-        
+        <input type="text" name="CompanyName" id="companyName" required>
+
+        <label for="email">Contact Email:</label>
+        <input type="email" name="Email" id="email" required>
+
+        <label for="website">Website URL:</label>
+        <input type="url" name="Website" id="website" required>
+
         <label for="country">Country:</label>
-        <input type="text" name="Country" id="country" required><br>
-        
+        <input type="text" name="Country" id="country" required>
+
         <label for="registrationNumber">Registration Number:</label>
-        <input type="text" name="RegistrationNumber" id="registrationNumber" required><br>
-        
-        <label for="address">Address:</label>
-        <textarea name="Address" id="address" rows="4" required></textarea><br>
+        <input type="text" name="RegistrationNumber" id="registrationNumber" required>
+
+        <label for="address">Company Address:</label>
+        <textarea name="Address" id="address" rows="4" required></textarea>
+
         <label for="policyType">Select Policy:</label>
-            <select id="policyType" name="PolicyType" required>
-                <option value="ndpr">NDPR Compliant</option>
-                <option value="gdpr">GDPR Compliant</option>
-                <option value="ccpa">CCPA Compliant</option>
-            </select>
-        
+        <select id="policyType" name="PolicyType" required>
+            <option value="ndpr">NDPR Compliant</option>
+            <option value="gdpr">GDPR Compliant</option>
+            <option value="ccpa">CCPA Compliant</option>
+        </select>
+
+        <!-- Additional Questions for Policy Generation -->
+        <h2>Policy Generation Questions:</h2>
+
+        <!-- ... (include additional questions as needed) ... -->
+
+        <label for="dataCollection">What personal information do you collect from users?</label>
+        <textarea name="DataCollection" id="dataCollection" rows="4" required></textarea>
+
+        <label for="purposeOfData">Why do you collect user data? How is it used?</label>
+        <textarea name="PurposeOfData" id="purposeOfData" rows="4" required></textarea>
+
+        <label for="dataSharing">Do you share user data with third parties? If yes, for what purposes and with whom?</label>
+        <textarea name="DataSharing" id="dataSharing" rows="4" required></textarea>
+
+        <label for="securityMeasures">What security measures do you have in place to protect user data?</label>
+        <textarea name="SecurityMeasures" id="securityMeasures" rows="4" required></textarea>
+
+        <label for="userRights">What rights do users have regarding their personal information?</label>
+        <textarea name="UserRights" id="userRights" rows="4" required></textarea>
+
+         <label for="cookiesTracking">Do you use cookies or similar tracking technologies?</label>
+        <select name="CookiesTracking" id="cookiesTracking" required>
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+        </select>
+
+        <label for="policyUpdates">How often is the privacy policy reviewed and updated?</label>
+        <textarea name="PolicyUpdates" id="policyUpdates" rows="4" required></textarea>
+
+        <label for="legalCompliance">Are you compliant with specific data protection laws? Provide details.</label>
+        <textarea name="LegalCompliance" id="legalCompliance" rows="4" required></textarea>
+
+
         <input type="submit" value="Generate">
     </form>
-    <footer style="margin-top: 20px;">
+    <footer>
         <p>&copy; <script>document.write(new Date().getFullYear())</script> Daniel Ola-Olorun. All rights reserved.</p>
     </footer>
 </body>
 </html>
+
+
