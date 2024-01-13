@@ -46,12 +46,12 @@ Roadmap
 -------
 
 
-- GDPR []
-- NDPR []
-- CCPA []
-- Ghana Data Protection Act []
-- View/Download PDF []
-- Get Unique link   []
+- [] GDPR 
+- [] NDPR 
+- [] CCPA 
+- [] Ghana Data Protection Act 
+- [] View/Download PDF 
+- [] Get Custom link   
 - 
 
 Contribute
