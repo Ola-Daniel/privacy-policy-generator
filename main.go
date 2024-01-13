@@ -94,6 +94,8 @@ func main() {
 	//Set up a route to handle the web interface
 	router.LoadHTMLGlob("templates/*")
 
+	router.StaticFile("favicon.ico", "./favicon.ico" )
+
 	router.GET("/", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "index.tmpl", nil)
 	})

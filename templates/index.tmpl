@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Privacy Policy Generator</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico?">
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -133,7 +135,10 @@
         </select>
 
         <label for="policyUpdates">How often is the privacy policy reviewed and updated?</label>
-        <textarea name="PolicyUpdates" id="policyUpdates" rows="4" required></textarea>
+        <select name="PolicyUpdates" id="policyUpdates"  required>
+        <option value="yearly">Yearly</option>
+            <option value="monthly">Monthly</option>
+        </select>
 
         <label for="legalCompliance">Are you compliant with specific data protection laws? Provide details.</label>
         <textarea name="LegalCompliance" id="legalCompliance" rows="4" required></textarea>
