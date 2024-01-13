@@ -69,9 +69,9 @@ SELECT * FROM privacy_policies WHERE id = ?;
 //Privacy Policy templates
 
 const (
-NDPRFileName = "ndpr.html"
-GDPRFileName = "gdpr.html"
-CCPAFileName = "ccpa.html"
+NDPRFileName = "ndpr.tmpl"
+GDPRFileName = "gdpr.tmpl"
+CCPAFileName = "ccpa.tmpl"
 )
 
 func main() {
@@ -93,8 +93,9 @@ func main() {
 
 	//Set up a route to handle the web interface
 	router.LoadHTMLGlob("templates/*")
+
 	router.GET("/", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "index.html", nil)
+		c.HTML(http.StatusOK, "index.tmpl", nil)
 	})
 
 	router.POST("/generate", func(c *gin.Context) {
@@ -144,12 +145,12 @@ func main() {
 		selectedPolicyType := c.PostForm("PolicyType")
 
 		renderedPolicies := map[string]template.HTML{
-			selectedPolicyType: template.HTML(renderTemplate(loadTemplate(selectedPolicyType, selectedPolicyType+".html"), retrievedPolicy)),
+			selectedPolicyType: template.HTML(renderTemplate(loadTemplate(selectedPolicyType, selectedPolicyType+".tmpl"), retrievedPolicy)),
 		}
 		
 
 
-		c.HTML(http.StatusOK, "generated_policy.html", gin.H{
+		c.HTML(http.StatusOK, "generated_policy.tmpl", gin.H{
 			"SelectedPolicy": selectedPolicyType,
 			"PolicyContent": template.HTML(renderedPolicies[selectedPolicyType]),
 		})
@@ -191,7 +192,7 @@ func renderTemplate(tmpl *template.Template, data PrivacyPolicy) string {
 
 
 func loadTemplate(name, fileName string) *template.Template {
-	tmpl, err := template.New(name).ParseFiles("templates/base.html", "templates/"+fileName)
+	tmpl, err := template.New(name).ParseFiles("templates/base.tmpl", "templates/"+fileName)
 	if err != nil {
 		log.Fatal(err)
 	}
