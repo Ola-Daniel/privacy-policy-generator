@@ -3,10 +3,13 @@ package main
 import (
 	"bytes"
 	"database/sql"
+	"html"
 	"fmt"
 	"html/template"
 	"log"
 	"net/http"
+	"strings"
+
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
 
@@ -101,6 +104,16 @@ func main() {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
+        
+
+
+		// Sanitize user input
+        data.CompanyName = sanitizeInput(data.CompanyName)
+		data.Email = sanitizeInput(data.Email)
+		data.Website = sanitizeInput(data.Website)
+		data.Country = sanitizeInput(data.Country)
+		data.RegistrationNumber = sanitizeInput(data.RegistrationNumber)
+		data.Address = sanitizeInput(data.Address)
 
 		// Insert the privacy policy into the database
 		result, err := db.Exec(insertQuery, data.CompanyName, data.Email, data.Website, data.Country, data.RegistrationNumber, data.Address)
@@ -130,15 +143,15 @@ func main() {
 
 		selectedPolicyType := c.PostForm("PolicyType")
 
-		renderedPolicies := map[string]string{
-			selectedPolicyType: renderTemplate(loadTemplate(selectedPolicyType, selectedPolicyType+".html"), retrievedPolicy),
+		renderedPolicies := map[string]template.HTML{
+			selectedPolicyType: template.HTML(renderTemplate(loadTemplate(selectedPolicyType, selectedPolicyType+".html"), retrievedPolicy)),
 		}
 		
 
 
 		c.HTML(http.StatusOK, "generated_policy.html", gin.H{
 			"SelectedPolicy": selectedPolicyType,
-			"PolicyContent": renderedPolicies[selectedPolicyType],
+			"PolicyContent": template.HTML(renderedPolicies[selectedPolicyType]),
 		})
 
 
@@ -146,6 +159,18 @@ func main() {
 
 	//Run the web server
 	router.Run(":8080")
+}
+
+
+func sanitizeInput(input string) string {
+	//Escape HTML characters
+	sanitizedInput := html.EscapeString(input)
+	//Trim leading and trailing whitespaces
+	sanitizedInput = strings.TrimSpace(sanitizedInput)
+	
+
+	return sanitizedInput
+
 }
 
 func renderTemplate(tmpl *template.Template, data PrivacyPolicy) string {
