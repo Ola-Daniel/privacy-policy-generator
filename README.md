@@ -49,10 +49,11 @@ Roadmap
 - [ ] GDPR 
 - [ ] NDPR 
 - [ ] CCPA 
+- [ ] POPIA
 - [ ] Ghana Data Protection Act 
 - [ ] View/Download PDF 
 - [ ] Get Custom link   
-- 
+
 
 Contribute
 ----------
