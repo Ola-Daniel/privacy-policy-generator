@@ -10,7 +10,15 @@ import (
 	"net/http"
 	"strings"
 
+    "github.com/bcongdon/fn"
 	"github.com/gin-gonic/gin"
+	"github.com/johnfercher/maroto/v2/pkg/core"
+    "github.com/johnfercher/maroto/v2/pkg/components/col"
+    "github.com/johnfercher/maroto/v2/pkg/components/line"
+    "github.com/johnfercher/maroto/v2"
+    "github.com/johnfercher/maroto/v2/pkg/components/code"
+    "github.com/johnfercher/maroto/v2/pkg/components/signature"
+    "github.com/johnfercher/maroto/v2/pkg/components/text"
 	_ "github.com/go-sql-driver/mysql"
 
 )
@@ -75,6 +83,9 @@ CCPAFileName = "ccpa.tmpl"
 )
 
 func main() {
+
+
+
 	//open a database connection
 	db, err := sql.Open(dbDriver, fmt.Sprintf("%s:%s@tcp(127.0.0.1:3306)/%s", dbUser, dbPassword, dbName))
 	if err != nil {
@@ -101,26 +112,40 @@ func main() {
 	})
     
 	router.GET("/download-pdf", func(c *gin.Context) {
-		//selectedPolicyType := c.Query("policyType")
-		//retrievedPolicy := PrivacyPolicy{} //Fetch the policy based on the type
+		fNamer := fn.New()
+		random := fNamer.Name()
+		selectedPolicyType := c.Query("policyType")
+		retrievedPolicy := PrivacyPolicy{} //Fetch the policy based on the type
 
 		//Load the template and render the HTML content
-		//htmlContent := renderTemplate(loadTemplate(selectedPolicyType, selectedPolicyType+".tmpl"), retrievedPolicy)
+		htmlContent := renderTemplate(loadTemplate(selectedPolicyType, selectedPolicyType+".tmpl"), retrievedPolicy)
+		//Log generated output
+		log.Printf("Generated Output: %v", htmlContent)
+
 		//create a New PDF document
-        //
-		//Add HTML content to the PDF
-		//
+        m := GetMaroto()
+		document, err := m.Generate()
+		if err != nil {
+			log.Fatal(err)
+		}
+
+ 
+        //Save the document to the buffer
+         err = document.Save(fmt.Sprintf("pdf/%s_privacy_policy_%s.pdf", selectedPolicyType, random))
+        if err != nil {
+            log.Fatal(err)
+        }
+
+		
 		//Set up the HTTP response headers
-        //c.Header("Content-Disposition", fmt.Sprintf("attachment; filename=%s_privacy_policy.pdf", selectedPolicyType))
-        //c.Header("Content-Type", "application/pdf")
+        
+        c.Header("Content-Disposition", fmt.Sprintf("attachment; filename=%s_privacy_policy_%s.pdf", selectedPolicyType, random))
+        c.Header("Content-Type", "application/pdf")
 
 		//Write the PDF content to the response
-		//err := pdf.Output(c.Writer)            
-		//if err != nil {
-		//	log.Fatal(err)
-		//}
+		http.ServeFile(c.Writer, c.Request, fmt.Sprintf("pdf/%s_privacy_policy_%s.pdf", selectedPolicyType, random))
 
-		//c.Status(http.StatusOK)
+		c.Status(http.StatusOK)
 
 
 
@@ -230,3 +255,30 @@ func loadTemplate(name, fileName string) *template.Template {
 	}
 	return tmpl
 }
+
+
+func GetMaroto() core.Maroto {
+
+	m := maroto.New()
+    m.AddRow(20,
+        code.NewBarCol(4, "barcode"),
+        code.NewMatrixCol(4, "matrixcode"),
+        code.NewQrCol(4, "qrcode"),
+    )
+
+    m.AddRow(10, col.New(12))
+
+    m.AddRow(20,
+        //image.NewFromFileCol(4, "docs/assets/images/biplane.jpg"),
+        signature.NewCol(4, "signature"),
+        text.NewCol(4, "text"),
+    )
+
+    m.AddRow(10, col.New(12))
+
+    m.AddRow(20, line.NewCol(12))
+
+    return m
+	
+}
+
