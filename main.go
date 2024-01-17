@@ -8,8 +8,10 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"os"
 	"strings"
-
+    
+	"github.com/joho/godotenv"
     "github.com/bcongdon/fn"
 	"github.com/gin-gonic/gin"
 	"github.com/johnfercher/maroto/v2/pkg/core"
@@ -42,12 +44,9 @@ type TemplateData struct {
 	Template      string
 }
 
-// Database connection parameters
+// DB Drive Constant
 const (
 	dbDriver   = "mysql"
-	dbUser     = "root"
-	dbPassword = "password"
-	dbName     = "privacy_policy_db"
 )
 
 // Create the "privacy_policies" table if it doesn't exist
@@ -84,10 +83,16 @@ CCPAFileName = "ccpa.tmpl"
 
 func main() {
 
-
+    err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+		
+	}
+	
+	dbString := os.Getenv("DB_STRING")
 
 	//open a database connection
-	db, err := sql.Open(dbDriver, fmt.Sprintf("%s:%s@tcp(127.0.0.1:3306)/%s", dbUser, dbPassword, dbName))
+	db, err := sql.Open(dbDriver, fmt.Sprintf(dbString))
 	if err != nil {
 		log.Fatal(err)
 	}
