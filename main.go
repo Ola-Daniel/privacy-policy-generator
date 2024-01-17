@@ -89,10 +89,14 @@ func main() {
 		
 	}
 	
-	dbString := os.Getenv("DB_STRING")
+	dbUser := os.Getenv("DB_USER")
+	dbPassword := os.Getenv("DB_PASSWORD")
+	dbHost := os.Getenv("DB_HOST")
+	dbName := os.Getenv("DB_NAME")
+
 
 	//open a database connection
-	db, err := sql.Open(dbDriver, fmt.Sprint(dbString))
+	db, err := sql.Open(dbDriver, fmt.Sprintf("%s:%s@tcp(%s:3306)/%s", dbUser, dbPassword, dbHost, dbName))
 	if err != nil {
 		log.Fatal(err)
 	}
