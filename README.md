@@ -38,7 +38,15 @@ Features
 Installation
 ------------
 
-This project is delivered as a SaaS @ https://danieloo.com/privacy-policy-generator , however you can also roll out and selfhost your own instance as we provide pre-built container images via the Docker Registry Hub here: https://hub.docker.com/repository/docker/doolaa/policygenerator  
+This project is delivered as a SaaS @ https://danieloo.com/privacy-policy-generator, however you can also roll out and selfhost your own instance as we provide pre-built container images via the Docker Registry Hub here: https://hub.docker.com/repository/docker/doolaa/policygenerator
+You'll simply need to specify the following required values in your .env file and you should be able to roll your instance. 
+
+DB_USER
+DB_PASSWORD
+DB_HOST
+DB_NAME
+
+
 
 
 
