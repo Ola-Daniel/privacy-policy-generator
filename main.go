@@ -92,7 +92,7 @@ func main() {
 	dbString := os.Getenv("DB_STRING")
 
 	//open a database connection
-	db, err := sql.Open(dbDriver, fmt.Sprintf(dbString))
+	db, err := sql.Open(dbDriver, fmt.Sprint(dbString))
 	if err != nil {
 		log.Fatal(err)
 	}
