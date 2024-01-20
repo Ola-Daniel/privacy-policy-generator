@@ -35,7 +35,7 @@ jobs:
     #- name: Run tests
     #  run: go test -race -vet=off ./...
 
-  deploy:
+  push:
 
     runs-on: ubuntu-latest
     needs: [build]
@@ -56,17 +56,17 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and export to Docker
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          load: true    
+      - name: Generate Semantic Version
+        id: version
+        run: |
+          echo "::set-output name=version::$(./your-versioning-script.sh)"  
 
-      - name: Build and push
+      - name: Push
         uses: docker/build-push-action@v5
         with:
           context: .
           platforms: linux/amd64
+          load: true
           push: true
-          tags: doolaa/policygenerator:latest
+          tags: doolaa/policygenerator:${{ steps.version.outputs.version }}, doolaa/policygenerator:latest
           
