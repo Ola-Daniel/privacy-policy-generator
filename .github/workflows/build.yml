@@ -72,5 +72,6 @@ jobs:
           context: .
           platforms: linux/amd64
           push: true
-          tags: doolaa/policygenerator:${{ steps.version.outputs.version }}, doolaa/policygenerator:latest
+          tags: |
+            doolaa/policygenerator:${{ steps.version.outputs.version }}, doolaa/policygenerator:latest
           

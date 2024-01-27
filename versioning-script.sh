@@ -10,4 +10,5 @@ IFS='.' read -r major minor patch <<< "$latest_tag"
 patch=$((patch + 1))
 
 # Output the new version
-echo "${major}.${minor}.${patch}"
+echo "$major.$minor.$patch"
+
