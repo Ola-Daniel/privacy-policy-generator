@@ -39,12 +39,9 @@ jobs:
 
     runs-on: ubuntu-latest
     needs: [build]
-    #if: ${{ needs.build.result == 'sucess' }}
+    if: ${{ needs.build.result == 'success' }}
 
     steps:
-
-      - name: Debug Build Job Result
-        run: echo "Build Job Result =========== ${{ needs.build.result }}"
 
       - name: Checkout
         uses: actions/checkout@v4
