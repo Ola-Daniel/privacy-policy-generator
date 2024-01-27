@@ -119,6 +119,13 @@ func main() {
 	router.GET("/", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "index.tmpl", nil)
 	})
+
+			//create a New PDF document
+	m := GetMaroto()
+	document, err := m.Generate()
+	if err != nil {
+		log.Fatal(err)
+	}
     
 	router.GET("/download-pdf", func(c *gin.Context) {
 		fNamer := fn.New()
@@ -131,12 +138,7 @@ func main() {
 		//Log generated output
 		log.Printf("Generated Output: %v", htmlContent)
 
-		//create a New PDF document
-        m := GetMaroto()
-		document, err := m.Generate()
-		if err != nil {
-			log.Fatal(err)
-		}
+
 
  
         //Save the document to the buffer
