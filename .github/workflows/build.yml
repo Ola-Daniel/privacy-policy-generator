@@ -59,7 +59,7 @@ jobs:
       - name: Generate Semantic Version
         id: version
         run: |
-          echo "::set-output name=version::$(./your-versioning-script.sh)"  
+          echo "::set-output name=version::$(./versioning-script.sh)"  
 
       - name: Push
         uses: docker/build-push-action@v5
