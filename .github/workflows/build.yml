@@ -58,6 +58,9 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      - name: Grant execute permission to versioning script
+        run: chmod +x versioning-script.sh
+      
       - name: Generate Semantic Version
         id: version
         run: |
