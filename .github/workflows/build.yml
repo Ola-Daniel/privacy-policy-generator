@@ -44,7 +44,7 @@ jobs:
     steps:
 
       - name: Debug Build Job Result
-        run: echo "Build Job Result: ${{ needs.build.result }}"
+        run: echo "Build Job Result =========== ${{ needs.build.result }}"
 
       - name: Checkout
         uses: actions/checkout@v4
