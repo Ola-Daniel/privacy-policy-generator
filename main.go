@@ -290,6 +290,6 @@ func GetMaroto() core.Maroto {
     m.AddRow(20, line.NewCol(12))
 
     return m
-	
+	//testing versioning script
 }
 
