@@ -45,11 +45,11 @@ You'll simply need to specify the following required values in your .env file an
 
 .Env file required values
 ----------------------
-- DB_USER
-- DB_PASSWORD
-- DB_HOST
-- DB_NAME
-- OPENAI_KEY
+- DB_USER=<value of mysql database user>
+- DB_PASSWORD=<value of mysql database password>
+- DB_HOST=<mysql host>
+- DB_NAME=<database name>
+- OPENAI_KEY=<openai api key>
 
 
 
