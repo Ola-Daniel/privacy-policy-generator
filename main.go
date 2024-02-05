@@ -93,15 +93,10 @@ func main() {
 	
 
 
-	token := os.Getenv("OPENAI_KEY")
-	dbUser := os.Getenv("DB_USER")
-	dbPassword := os.Getenv("DB_PASSWORD")
-	dbHost := os.Getenv("DB_HOST")
-	dbName := os.Getenv("DB_NAME")
 
 
 	//open a database connection
-	db, err := sql.Open(dbDriver, fmt.Sprintf("%s:%s@tcp(%s:3306)/%s", dbUser, dbPassword, dbHost, dbName))
+	db, err := sql.Open(dbDriver, fmt.Sprintf("%s:%s@tcp(%s:3306)/%s", os.Getenv("DB_USER"), os.Getenv("DB_PASSWORD"), os.Getenv("DB_HOST"), os.Getenv("DB_NAME")))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -113,7 +108,7 @@ func main() {
 	}
 
     //initialize OpenAI client
-	client := openai.NewClient(token)
+	client := openai.NewClient(os.Getenv("OPENAI_KEY"))
 	resp, err := client.CreateChatCompletion(
 		context.Background(),
 		openai.ChatCompletionRequest{
@@ -121,7 +116,7 @@ func main() {
 			Messages: []openai.ChatCompletionMessage{
 				     {
 					        Role: openai.ChatMessageRoleUser,
-							Content: "Hello!",
+							Content: "Generate a GDPR compliant privacy policy for my company, Disrupt technologies",
 					 },
 			},
 		},
