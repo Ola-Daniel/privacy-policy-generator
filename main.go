@@ -112,7 +112,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-    //initialize client
+    //initialize OpenAI client
 	client := openai.NewClient(token)
 	resp, err := client.CreateChatCompletion(
 		context.Background(),
