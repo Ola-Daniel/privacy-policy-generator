@@ -43,7 +43,7 @@ You'll simply need to specify the following required values in your .env file an
 
 
 
-.ENV File Value Requirements
+.Env file required values
 ----------------------
 - DB_USER
 - DB_PASSWORD
