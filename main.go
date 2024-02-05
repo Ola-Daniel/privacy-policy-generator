@@ -10,7 +10,9 @@ import (
 	"net/http"
 	"os"
 	"strings"
+	"context"
     
+	openai "github.com/sashabaranov/go-openai"
 	"github.com/joho/godotenv"
     "github.com/bcongdon/fn"
 	"github.com/gin-gonic/gin"
@@ -89,6 +91,9 @@ func main() {
 		
 	}
 	
+
+
+	token := os.Getenv("OPENAI_KEY")
 	dbUser := os.Getenv("DB_USER")
 	dbPassword := os.Getenv("DB_PASSWORD")
 	dbHost := os.Getenv("DB_HOST")
@@ -106,6 +111,26 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+    //initialize client
+	client := openai.NewClient(token)
+	resp, err := client.CreateChatCompletion(
+		context.Background(),
+		openai.ChatCompletionRequest{
+			Model: openai.GPT3Dot5Turbo,
+			Messages: []openai.ChatCompletionMessage{
+				     {
+					        Role: openai.ChatMessageRoleUser,
+							Content: "Hello!",
+					 },
+			},
+		},
+	)
+	if err != nil {
+		fmt.Printf("ChatCompletion error: %v\n", err)
+		return
+	}
+	fmt.Println(resp.Choices[0].Message.Content)
 
 	// Initialize Gin
 

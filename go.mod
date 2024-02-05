@@ -10,6 +10,9 @@ require (
 )
 
 require (
+	github.com/Azure/azure-sdk-for-go/sdk/ai/azopenai v0.4.1 // indirect
+	github.com/Azure/azure-sdk-for-go/sdk/azcore v1.9.1 // indirect
+	github.com/Azure/azure-sdk-for-go/sdk/internal v1.5.1 // indirect
 	github.com/boombuler/barcode v1.0.1 // indirect
 	github.com/bytedance/sonic v1.9.1 // indirect
 	github.com/chenzhuoyu/base64x v0.0.0-20221115062448-fe3a3abad311 // indirect
@@ -37,6 +40,7 @@ require (
 	github.com/pelletier/go-toml/v2 v2.0.8 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/rivo/uniseg v0.4.4 // indirect
+	github.com/sashabaranov/go-openai v1.19.2 // indirect
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/ugorji/go/codec v1.2.11 // indirect
 	golang.org/x/arch v0.3.0 // indirect
