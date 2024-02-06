@@ -37,6 +37,7 @@ type PrivacyPolicy struct {
 	Country            string
 	RegistrationNumber string
 	Address            string
+	Content            string
 }
 
 // TemplateData represents the data structure for template rendering
@@ -61,14 +62,18 @@ CREATE TABLE IF NOT EXISTS privacy_policies (
 	website VARCHAR(255) NOT NULL,
 	country VARCHAR(255) NOT NULL,
 	registration_number VARCHAR(255) NOT NULL,
-	address VARCHAR(255) NOT NULL
+	address VARCHAR(255) NOT NULL,
+	content LONGTEXT NOT NULL
+
 );
 `
 
+
+
 // Insert a privacy policy into the database
 const insertQuery = `
-INSERT INTO privacy_policies (company_name, email, website, country, registration_number, address)
-VALUES (?, ?, ?, ?, ?, ?);
+INSERT INTO privacy_policies (company_name, email, website, country, registration_number, address, content)
+VALUES (?, ?, ?, ?, ?, ?, ?);
 `
 
 const selectQuery = `
@@ -107,25 +112,10 @@ func main() {
 		log.Fatal(err)
 	}
 
-    //initialize OpenAI client
-	client := openai.NewClient(os.Getenv("OPENAI_KEY"))
-	resp, err := client.CreateChatCompletion(
-		context.Background(),
-		openai.ChatCompletionRequest{
-			Model: openai.GPT3Dot5Turbo,
-			Messages: []openai.ChatCompletionMessage{
-				     {
-					        Role: openai.ChatMessageRoleUser,
-							Content: "Generate a GDPR compliant privacy policy for my company, Disrupt technologies",
-					 },
-			},
-		},
-	)
-	if err != nil {
-		fmt.Printf("ChatCompletion error: %v\n", err)
-		return
-	}
-	fmt.Println(resp.Choices[0].Message.Content)
+
+
+
+
 
 	// Initialize Gin
 
@@ -193,7 +183,12 @@ func main() {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
-        
+
+		//Check if all required fields are present
+		if data.CompanyName == "" || data.Email == "" || data.Website == "" || data.Country == "" || data.RegistrationNumber == "" || data.Address == "" {
+            c.JSON(http.StatusBadRequest, gin.H{"error": "Please fill in all required fields"})
+			return
+		}
 
 
 		// Sanitize user input
@@ -203,10 +198,12 @@ func main() {
 		data.Country = sanitizeInput(data.Country)
 		data.RegistrationNumber = sanitizeInput(data.RegistrationNumber)
 		data.Address = sanitizeInput(data.Address)
+		data.Content = " "
 
 		// Insert the privacy policy into the database
-		result, err := db.Exec(insertQuery, data.CompanyName, data.Email, data.Website, data.Country, data.RegistrationNumber, data.Address)
+		result, err := db.Exec(insertQuery, data.CompanyName, data.Email, data.Website, data.Country, data.RegistrationNumber, data.Address, data.Content)
 		if err != nil {
+			log.Println("Error Inserting Privacy Policy into database")
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
@@ -222,13 +219,48 @@ func main() {
 			&retrievedPolicy.Country,
 			&retrievedPolicy.RegistrationNumber,
 			&retrievedPolicy.Address,
+			&retrievedPolicy.Content,
 		)
 
 		if err != nil {
+			log.Println("Error retrieving inserted privacy policy by id")
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
 
+        
+            //initialize OpenAI client
+	    client := openai.NewClient(os.Getenv("OPENAI_KEY"))
+	    resp, err := client.CreateChatCompletion(
+		    context.Background(),
+		    openai.ChatCompletionRequest{
+			    Model: openai.GPT3Dot5Turbo,
+			Messages: []openai.ChatCompletionMessage{
+				     {
+					        Role: openai.ChatMessageRoleUser,
+							Content: "Generate a GDPR compliant privacy policy for my company, Disrupt technologies",
+					 },
+			},
+		},
+	   )
+	    if err != nil {
+		    fmt.Printf("ChatCompletion error: %v\n", err)
+		    c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		    return
+	    }
+	    openaiContent := resp.Choices[0].Message.Content
+
+		//log.Printf("Generated Policy: %v", openaiContent)
+		
+
+
+		// update database with content
+		_, err = db.Exec("UPDATE privacy_policies SET content = ? WHERE ID = ?", openaiContent, lastInsertID)
+		if err != nil {
+			log.Println("Error updating database when generated policy")
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
 
 		selectedPolicyType := c.PostForm("PolicyType")
 
@@ -241,6 +273,7 @@ func main() {
 		c.HTML(http.StatusOK, "generated_policy.tmpl", gin.H{
 			"SelectedPolicy": selectedPolicyType,
 			"PolicyContent": template.HTML(renderedPolicies[selectedPolicyType]),
+			"OpenAIContent": openaiContent, // add OpenAI content to the response
 		})
 
 
@@ -274,7 +307,7 @@ func renderTemplate(tmpl *template.Template, data PrivacyPolicy) string {
 		log.Fatal(err)
 	}
 	resultString := result.String()
-	log.Printf("Generated HTML: %v", resultString)
+	//log.Printf("Generated HTML: %v", resultString)
 	return resultString
 }
 
