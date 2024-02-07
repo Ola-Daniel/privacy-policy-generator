@@ -343,12 +343,11 @@ func GetMaroto(policyContent string, selectedPolicyType string ) core.Maroto {
     
 	header := " Compliant Privacy Policy"
 
+	selectedPolicyType += ""
+
+	selectedPolicyType = strings.ToUpper(selectedPolicyType)
 
 	selectedPolicyType += header
-
-	selectedPolicyType = strings.Title(selectedPolicyType)
-
-	
 
 	m.AddRow(10, text.NewCol(10, selectedPolicyType, props.Text{
         Size:  24,
@@ -356,9 +355,11 @@ func GetMaroto(policyContent string, selectedPolicyType string ) core.Maroto {
         Align: align.Center,
     })) 
 		
+    m.AddRow(25,)
 
-
-	m.AddRow(20, text.NewCol(12, policyContent))
+	m.AddRow(20, text.NewCol(12, policyContent, props.Text{
+		Size: 14,
+	}))
 
     return m
 }
