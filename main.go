@@ -19,6 +19,9 @@ import (
 	"github.com/johnfercher/maroto/v2/pkg/core"
     "github.com/johnfercher/maroto/v2"
     "github.com/johnfercher/maroto/v2/pkg/components/text"
+	"github.com/johnfercher/maroto/v2/pkg/consts/align"
+    "github.com/johnfercher/maroto/v2/pkg/consts/fontstyle"
+    "github.com/johnfercher/maroto/v2/pkg/props"
 	_ "github.com/go-sql-driver/mysql"
 
 )
@@ -136,6 +139,7 @@ func main() {
 		fNamer := fn.New()
 		random := fNamer.Name()
 		selectedPolicyType := c.Query("policyType")
+
 		if selectedPolicyType == "" {
 			log.Println("Policy Type not provided")
 			c.JSON(http.StatusBadRequest, gin.H{"error": "Policy type not provided"})
@@ -156,7 +160,7 @@ func main() {
 			return
         }
 
-		m := GetMaroto(policyContent)
+		m := GetMaroto(policyContent, selectedPolicyType)
 		document, err := m.Generate()
 		if err != nil {
 			log.Println("Error generating maroto pdf file", err)
@@ -333,13 +337,29 @@ func loadTemplate(name, fileName string) *template.Template {
 }
 
 
-func GetMaroto(policyContent string) core.Maroto {
+func GetMaroto(policyContent string, selectedPolicyType string ) core.Maroto {
 
 	m := maroto.New()
+    
+	header := " Compliant Privacy Policy"
+
+
+	selectedPolicyType += header
+
+	selectedPolicyType = strings.Title(selectedPolicyType)
+
+	
+
+	m.AddRow(10, text.NewCol(10, selectedPolicyType, props.Text{
+        Size:  24,
+        Style: fontstyle.Bold,
+        Align: align.Center,
+    })) 
+		
+
 
 	m.AddRow(20, text.NewCol(12, policyContent))
 
     return m
-	//Testing New Version for versioning script
 }
 
