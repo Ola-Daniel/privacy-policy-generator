@@ -11,6 +11,7 @@ import (
 	"os"
 	"strings"
 	"context"
+	"regexp"
     
 	openai "github.com/sashabaranov/go-openai"
 	"github.com/joho/godotenv"
@@ -357,9 +358,25 @@ func GetMaroto(policyContent string, selectedPolicyType string ) core.Maroto {
 		
     m.AddRow(25,)
 
-	m.AddRow(20, text.NewCol(12, policyContent, props.Text{
-		Size: 14,
-	}))
+
+	    // Define regex pattern to match any number followed by a full stop
+	pattern := `\d+\.` // This pattern matches any number followed by a full stop
+
+		// Compile the regex pattern
+	regex := regexp.MustCompile(pattern)
+	
+		// Replace any number followed by a full stop with an empty string
+	policyContent = regex.ReplaceAllString(policyContent, "\n")
+
+	log.Printf("Pre-Rendered Output: %v", policyContent)
+
+	paragraphs := strings.Split(policyContent, "  ")
+
+    for _, paragraph := range paragraphs {
+        m.AddRow(20, text.NewCol(12, paragraph, props.Text{
+            Size: 14,
+        }))
+    }
 
     return m
 }
