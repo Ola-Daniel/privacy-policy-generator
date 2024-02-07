@@ -199,6 +199,8 @@ func main() {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
+        //get selected privacy policy legislature
+		selectedPolicyType := c.PostForm("PolicyType")
 
 		//Check if all required fields are present
 		if data.CompanyName == "" || data.Email == "" || data.Website == "" || data.Country == "" || data.RegistrationNumber == "" || data.Address == "" {
@@ -223,7 +225,7 @@ func main() {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
-
+         
 		// Retrive the inserted privacy policy by ID
 		lastInsertID, _ := result.LastInsertId() //Store lastInsertID in the precreated variable
 		retrievedPolicy := PrivacyPolicy{}
@@ -243,8 +245,10 @@ func main() {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
-
-        
+        //create prompt
+        prompt := fmt.Sprintf("Generate a custom %s compliant privacy policy for my company, %s.\n\nCompany Name: %s\nEmail: %s\nWebsite: %s\nCountry: %s\nRegistration Number: %s\nAddress: %s",
+		selectedPolicyType, data.CompanyName, data.CompanyName, data.Email, data.Website, data.Country, data.RegistrationNumber, data.Address)
+		
             //initialize OpenAI client
 	    client := openai.NewClient(os.Getenv("OPENAI_KEY"))
 	    resp, err := client.CreateChatCompletion(
@@ -254,7 +258,7 @@ func main() {
 			Messages: []openai.ChatCompletionMessage{
 				     {
 					        Role: openai.ChatMessageRoleUser,
-							Content: "Generate a GDPR compliant privacy policy for my company, Disrupt technologies",
+							Content: prompt,
 					 },
 			},
 		},
@@ -278,7 +282,7 @@ func main() {
 			return
 		}
       
-		selectedPolicyType := c.PostForm("PolicyType")
+		
 
 		renderedPolicies := map[string]template.HTML{
 			selectedPolicyType: template.HTML(renderTemplate(loadTemplate(selectedPolicyType, selectedPolicyType+".tmpl"), retrievedPolicy)),
