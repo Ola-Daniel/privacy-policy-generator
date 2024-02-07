@@ -17,11 +17,7 @@ import (
     "github.com/bcongdon/fn"
 	"github.com/gin-gonic/gin"
 	"github.com/johnfercher/maroto/v2/pkg/core"
-    "github.com/johnfercher/maroto/v2/pkg/components/col"
-    "github.com/johnfercher/maroto/v2/pkg/components/line"
     "github.com/johnfercher/maroto/v2"
-    "github.com/johnfercher/maroto/v2/pkg/components/code"
-    "github.com/johnfercher/maroto/v2/pkg/components/signature"
     "github.com/johnfercher/maroto/v2/pkg/components/text"
 	_ "github.com/go-sql-driver/mysql"
 
@@ -51,6 +47,9 @@ type TemplateData struct {
 const (
 	dbDriver   = "mysql"
 )
+
+//shared variable to store lastInsertID
+var lastInsertID int
 
 // Create the "privacy_policies" table if it doesn't exist
 
@@ -131,28 +130,41 @@ func main() {
 	})
 
 			//create a New PDF document
-	m := GetMaroto()
-	document, err := m.Generate()
-	if err != nil {
-		log.Fatal(err)
-	}
+	
     
 	router.GET("/download-pdf", func(c *gin.Context) {
 		fNamer := fn.New()
 		random := fNamer.Name()
 		selectedPolicyType := c.Query("policyType")
-		retrievedPolicy := PrivacyPolicy{} //Fetch the policy based on the type
+		if selectedPolicyType == "" {
+			log.Println("Policy Type not provided")
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Policy type not provided"})
+		}
+		//add lastInsertID as query parameter
+		lastInsertID := c.Query("lastInsertID")
+		if lastInsertID == "" {
+			log.Println("lastInsertID not provided")
+			c.JSON(http.StatusBadRequest, gin.H{"error": "lastInsertID not provided"})
+			return
+		} 
 
-		//Load the template and render the HTML content
-		htmlContent := renderTemplate(loadTemplate(selectedPolicyType, selectedPolicyType+".tmpl"), retrievedPolicy)
-		//Log generated output
-		log.Printf("Generated Output: %v", htmlContent)
+		var policyContent string
+		err = db.QueryRow("SELECT content FROM privacy_policies WHERE id = ?", lastInsertID).Scan(&policyContent)
+        if err != nil {
+			log.Println("Error retrieving policy content from database:", err)
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Error retrieving policy content from database"})
+			return
+        }
 
+		m := GetMaroto(policyContent)
+		document, err := m.Generate()
+		if err != nil {
+			log.Println("Error generating maroto pdf file", err)
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Error generating maroto pdf file"})
+			return
+		}
 
-
- 
-        //Save the document to the buffer
-         err = document.Save(fmt.Sprintf("pdf/%s_privacy_policy_%s.pdf", selectedPolicyType, random))
+		err = document.Save(fmt.Sprintf("pdf/%s_privacy_policy_%s.pdf", selectedPolicyType, random))
         if err != nil {
             log.Fatal(err)
         }
@@ -167,10 +179,9 @@ func main() {
 		http.ServeFile(c.Writer, c.Request, fmt.Sprintf("pdf/%s_privacy_policy_%s.pdf", selectedPolicyType, random))
 
 		c.Status(http.StatusOK)
+	
+    })
 
-
-
-	})
 
 	router.GET("/get-link", func(c *gin.Context) {
 		//Link Creation implementation
@@ -209,7 +220,7 @@ func main() {
 		}
 
 		// Retrive the inserted privacy policy by ID
-		lastInsertID, _ := result.LastInsertId()
+		lastInsertID, _ := result.LastInsertId() //Store lastInsertID in the precreated variable
 		retrievedPolicy := PrivacyPolicy{}
 		err = db.QueryRow(selectQuery, lastInsertID).Scan(
 			&retrievedPolicy.ID,
@@ -252,7 +263,7 @@ func main() {
 
 		//log.Printf("Generated Policy: %v", openaiContent)
 		
-
+		log.Printf("lastInsertID: %v", lastInsertID)
 
 		// update database with content
 		_, err = db.Exec("UPDATE privacy_policies SET content = ? WHERE ID = ?", openaiContent, lastInsertID)
@@ -261,7 +272,7 @@ func main() {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
-
+      
 		selectedPolicyType := c.PostForm("PolicyType")
 
 		renderedPolicies := map[string]template.HTML{
@@ -274,6 +285,7 @@ func main() {
 			"SelectedPolicy": selectedPolicyType,
 			"PolicyContent": template.HTML(renderedPolicies[selectedPolicyType]),
 			"OpenAIContent": openaiContent, // add OpenAI content to the response
+			"LastInsertID": lastInsertID,
 		})
 
 
@@ -321,26 +333,11 @@ func loadTemplate(name, fileName string) *template.Template {
 }
 
 
-func GetMaroto() core.Maroto {
+func GetMaroto(policyContent string) core.Maroto {
 
 	m := maroto.New()
-    m.AddRow(20,
-        code.NewBarCol(4, "barcode"),
-        code.NewMatrixCol(4, "matrixcode"),
-        code.NewQrCol(4, "qrcode"),
-    )
 
-    m.AddRow(10, col.New(12))
-
-    m.AddRow(20,
-        //image.NewFromFileCol(4, "docs/assets/images/biplane.jpg"),
-        signature.NewCol(4, "signature"),
-        text.NewCol(4, "text"),
-    )
-
-    m.AddRow(10, col.New(12))
-
-    m.AddRow(20, line.NewCol(12))
+	m.AddRow(20, text.NewCol(12, policyContent))
 
     return m
 	//Testing New Version for versioning script
