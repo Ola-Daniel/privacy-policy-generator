@@ -69,18 +69,24 @@ jobs:
       - name: Generate Semantic Version
         id: version
         run: |
-          latest_tag=$(git describe --tags --abbrev=0)
-          IFS='.' read -r major minor patch <<< "$latest_tag"
-          patch=$((patch + 1))
-          echo "::set-output name=version::$major.$minor.$patch"
-
-
+          latest_tag=$(git describe --tags --abbrev=0 2>/dev/null)
+          if [ -z "$latest_tag" ]; then
+            initial_version="1.0.0"
+            echo "Initial version: $initial_version"
+            echo "::set-output name=version::$initial_version"
+          else
+            IFS='.' read -r major minor patch <<< "$latest_tag"
+            patch=$((patch + 1))
+            echo "New version: $major.$minor.$patch"
+            echo "::set-output name=version::$major.$minor.$patch"
+          fi
 
       - name: Debug Semantic Version output
         run: echo {{ steps.version.outputs.version }}
 
 
       - name: Tag and push new version
+        if: steps.version.outputs.version != '1.0.0'      # Skip tagging for initial version
         run: |
           git tag -a ${{ steps.version.outputs.version }} -m "Release ${{ steps.version.outputs.version }}"
           git push origin ${{ steps.version.outputs.version }}
