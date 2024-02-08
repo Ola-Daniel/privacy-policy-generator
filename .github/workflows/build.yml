@@ -82,8 +82,8 @@ jobs:
 
       - name: Tag and push new version
         run: |
-        git tag -a ${{ steps.version.outputs.version }} -m "Release ${{ steps.version.outputs.version }}"
-        git push origin ${{ steps.version.outputs.version }}
+          git tag -a ${{ steps.version.outputs.version }} -m "Release ${{ steps.version.outputs.version }}"
+          git push origin ${{ steps.version.outputs.version }}
 
       - name: Push Docker image
         uses: docker/build-push-action@v5
