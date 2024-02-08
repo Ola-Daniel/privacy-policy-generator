@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Get the latest tag if available
-latest_tag=$("git describe --tags --abbrev=0 2>/dev/null")
+latest_tag="$(git describe --tags --abbrev=0 2>/dev/null)"
 
 # Check if latest_tag is empty
 if [ -z "$latest_tag" ]; then
