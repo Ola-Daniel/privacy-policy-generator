@@ -152,7 +152,7 @@ func main() {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "lastInsertID not provided"})
 			return
 		} 
-
+           
 		var policyContent string
 		err = db.QueryRow("SELECT content FROM privacy_policies WHERE id = ?", lastInsertID).Scan(&policyContent)
         if err != nil {
