@@ -1,6 +1,11 @@
 name: Build
 
 on: [push, pull_request]
+        
+        branches:
+          - main # update this with the name of main branch
+        tags:
+          - '*'
 
 jobs:
 
@@ -64,18 +69,29 @@ jobs:
       - name: Generate Semantic Version
         id: version
         run: |
-          echo "::set-output name=version::$(./versioning-script.sh)"  
+          latest_tag=$(git describe --tags --abbrev=0)
+          IFS='.' read -r major minor patch <<< "$latest_tag"
+          patch=$((patch + 1))
+          echo "::set-output name=version::$major.$minor.$patch"
+
 
 
       - name: Debug Semantic Version output
         run: echo {{ steps.version.outputs.version }}
 
-      - name: Push
+
+      - name: Tag and push new version
+        run: |
+        git tag -a ${{ steps.version.outputs.version }} -m "Release ${{ steps.version.outputs.version }}"
+        git push origin ${{ steps.version.outputs.version }}
+
+      - name: Push Docker image
         uses: docker/build-push-action@v5
         with:
           context: .
           platforms: linux/amd64
           push: true
           tags: |
-            doolaa/policygenerator:${{ steps.version.outputs.version }}, doolaa/policygenerator:latest
+            doolaa/policygenerator:${{ steps.version.outputs.version }}
+            doolaa/policygenerator:latest
           
