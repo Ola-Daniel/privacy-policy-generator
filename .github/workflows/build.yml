@@ -74,12 +74,12 @@ jobs:
             initial_version="1.0.0"
             echo "Initial version: $initial_version"
             echo "::set-output name=version::$initial_version"
-          else
-            IFS='.' read -r major minor patch <<< "$latest_tag"
-            patch=$((patch + 1))
-            echo "New version: $major.$minor.$patch"
-            echo "::set-output name=version::$major.$minor.$patch"
+            exit 0
           fi
+          IFS='.' read -r major minor patch <<< "$latest_tag"
+          patch=$((patch + 1))
+          echo "New version: $major.$minor.$patch"
+          echo "::set-output name=version::$major.$minor.$patch"
 
       - name: Debug Semantic Version output
         run: echo {{ steps.version.outputs.version }}
