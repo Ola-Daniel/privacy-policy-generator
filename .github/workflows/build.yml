@@ -64,22 +64,12 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Grant execute permission to versioning script
-        run: chmod +x versioning-script.sh
+        run: chmod +x tag.sh
       
-      - name: Generate Semantic Version
+- name: Generate Semantic Version
         id: version
         run: |
-          latest_tag=$(git describe --tags --abbrev=0 2>/dev/null)
-          if [ -z "$latest_tag" ]; then
-            initial_version="1.0.0"
-            echo "Initial version: $initial_version"
-            echo "::set-output name=version::$initial_version"
-            exit 0
-          fi
-          IFS='.' read -r major minor patch <<< "$latest_tag"
-          patch=$((patch + 1))
-          echo "New version: $major.$minor.$patch"
-          echo "::set-output name=version::$major.$minor.$patch"
+          echo "::set-output name=version::$(./tag.sh)"  
 
       - name: Debug Semantic Version output
         run: echo {{ steps.version.outputs.version }}
