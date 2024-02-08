@@ -7,7 +7,7 @@ latest_tag=$(git describe --tags --abbrev=0 2>/dev/null)
 if [ -z "$latest_tag" ]; then
   # No tags found, set initial version
   initial_version="1.0.0"
-  echo "Initial version: $initial_version"
+  echo "$initial_version"
   exit 0
 fi
 
