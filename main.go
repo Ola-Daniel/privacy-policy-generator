@@ -53,7 +53,7 @@ const (
 )
 
 //shared variable to store lastInsertID
-var lastInsertID int
+//var lastInsertID int
 
 // Create the "privacy_policies" table if it doesn't exist
 
