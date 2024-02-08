@@ -66,7 +66,7 @@ jobs:
       - name: Grant execute permission to versioning script
         run: chmod +x tag.sh
       
-- name: Generate Semantic Version
+      - name: Generate Semantic Version
         id: version
         run: |
           echo "::set-output name=version::$(./tag.sh)"  
