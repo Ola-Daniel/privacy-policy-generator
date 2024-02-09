@@ -14,6 +14,7 @@ import (
 	"regexp"
     
 	openai "github.com/sashabaranov/go-openai"
+	"github.com/google/uuid"
 	"github.com/joho/godotenv"
     "github.com/bcongdon/fn"
 	"github.com/gin-gonic/gin"
@@ -39,6 +40,11 @@ type PrivacyPolicy struct {
 	Address            string
 	Content            string
 }
+
+//Map to store generated privacy policy content with their unique identifiers
+var generatedPolicies map[string]string
+
+
 
 // TemplateData represents the data structure for template rendering
 
@@ -90,6 +96,13 @@ NDPRFileName = "ndpr.tmpl"
 GDPRFileName = "gdpr.tmpl"
 CCPAFileName = "ccpa.tmpl"
 )
+
+
+
+func init() {
+	//initialize the map
+	generatedPolicies = make(map[string]string)
+}
 
 func main() {
 
@@ -189,7 +202,43 @@ func main() {
 
 
 	router.GET("/get-link", func(c *gin.Context) {
-		//Link Creation implementation
+		//Retrieve query parameters
+		selectedPolicyType := c.Query("policyType")
+		lastInsertID := c.Query("lastInsertID")
+
+		//check if required query parameters are provided
+		if selectedPolicyType == "" || lastInsertID == "" {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Policy type and lastInsertID are required"})
+			return
+		}
+        //Generate a unique identifier for the policy
+		policyID := uuid.New().String()
+		//Store the generated policy content with its unique identifier
+		generatedPolicies[policyID] = "Generated your privacy policy content here...."
+
+
+		//Generate the link to access the policy content
+		policyLink := fmt.Sprintf("/view-policy?id=%s", policyID)
+
+		//return the link in the response
+
+		c.JSON(http.StatusOK, gin.H{"policyLink": policyLink})
+	})
+
+
+	router.GET("/view-policy", func(c *gin.Context) {
+		//Retrieve the policy ID from the query parameter
+		policyID := c.Query("id")
+
+		//Check if the policy ID exists in the map
+		policyContent, ok := generatedPolicies[policyID]
+		if !ok {
+			c.JSON(http.StatusNotFound, gin.H{"error": "Policy not found"})
+			return
+		}
+
+		//Return the Polic content in the response
+		c.JSON(http.StatusOK, gin.H{"policyContent": policyContent})
 	})
 
 	router.POST("/generate", func(c *gin.Context) {
