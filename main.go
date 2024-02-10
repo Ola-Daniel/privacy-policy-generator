@@ -211,18 +211,62 @@ func main() {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "Policy type and lastInsertID are required"})
 			return
 		}
+
+
+		// Construt SQL query to retrieve policy content based on the lastInsertID
+
+		query := "SELECT content FROM privacy_policies WHERE id = ?"
+
+		// Query the database
+
+		var policyContent string
+
+		err := db.QueryRow(query, lastInsertID).Scan(&policyContent)
+		if err != nil {
+			log.Println("Error retrieving policy content from database:", err)
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Error retrieving policy content from database"})
+			return
+		}
+
+		//log.Println("Policy Content is:", policyContent)
+
+
+
         //Generate a unique identifier for the policy
 		policyID := uuid.New().String()
 		//Store the generated policy content with its unique identifier
-		generatedPolicies[policyID] = "Generated your privacy policy content here...."
+	    generatedPolicies[policyID] = "Generated your privacy policy content here...."
 
 
 		//Generate the link to access the policy content
-		policyLink := fmt.Sprintf("/view-policy?id=%s", policyID)
+		//policyLink := fmt.Sprintf("/view-policy?id=%s", policyID)
 
 		//return the link in the response
 
-		c.JSON(http.StatusOK, gin.H{"policyLink": policyLink})
+		//c.JSON(http.StatusOK, gin.H{"policyLink": policyLink})
+
+		tmplData := gin.H{
+			"SelectedPolicy": selectedPolicyType,
+			"OpenAIContent": policyContent,
+			"LastInsertID": lastInsertID,
+		}
+
+		renderedTemplate := bytes.NewBufferString("")
+		tmpl, err := template.New("linked_policy.tmpl").ParseFiles("templates/linked_policy.tmpl")
+		if err != nil {
+			log.Println("Error parsing template:", err)
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Error parsing template"})
+			return
+		}
+		err = tmpl.Execute(renderedTemplate, tmplData)
+		if err != nil {
+			log.Println("Error executing template:", err)
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Error executing template file"})
+			return
+		}
+		// Return the rendered template in the response
+		c.Header("Content-Type", "text/html")
+		c.String(http.StatusOK, renderedTemplate.String())
 	})
 
 
