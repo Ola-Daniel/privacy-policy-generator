@@ -247,7 +247,7 @@ func main() {
 
 		tmplData := gin.H{
 			"SelectedPolicy": selectedPolicyType,
-			"OpenAIContent": policyContent,
+			"PolicyContent": policyContent,
 			"LastInsertID": lastInsertID,
 		}
 
