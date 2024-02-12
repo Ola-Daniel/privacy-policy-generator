@@ -14,6 +14,7 @@ import (
 	"regexp"
     
 	openai "github.com/sashabaranov/go-openai"
+	"github.com/gin-contrib/cors"
 	"github.com/google/uuid"
 	"github.com/joho/godotenv"
     "github.com/bcongdon/fn"
@@ -137,17 +138,45 @@ func main() {
 
 	router := gin.Default()
 
+	config := cors.DefaultConfig()
+	config.AllowAllOrigins = false
+	config.AllowOrigins = append(config.AllowOrigins, "http://localhost:8080")
+	config.AllowCredentials  = true
+	router.Use(cors.New(config))
+
 	//Set up a route to handle the web interface
 	router.LoadHTMLGlob("templates/*")
 
 	router.StaticFile("favicon.ico", "./favicon.ico" )
 
 	router.GET("/", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "index.tmpl", nil)
+          
+		//cookie, err := c.Cookie("user")
+
+		//if err != nil || cookie == "" {
+			//cookie = "NotSet"
+			//log.Println("Setting Cookie..........")
+			//c.SetCookie("user", "John Doe", 3600, "/", "localhost", false, false)
+			//cookie := http.Cookie{Name: "locality", Value: "here", Expires: time.Now().Add(time.Hour), HttpOnly: true, MaxAge: 50000, Path: "/"}
+			//log.Println("Setting Completed!")
+            //cookie = "John Doe"
+			 //}
+		 //set cookie
+		//c.String(http.StatusOK, "Cookie has been set")
+		//log.Println("Error retrieving cookie:", err)
+		//	c.String(http.StatusNotFound, "Cookie not found")
+		
+		//fmt.Printf("Cookie value: %s \n", cookie)
+        //log.Println("Cookie value:", cookie)
+
+
+	    c.HTML(http.StatusOK, "index.tmpl", nil)
+
+		
 	})
 
-			//create a New PDF document
-	
+
+
     
 	router.GET("/download-pdf", func(c *gin.Context) {
 		fNamer := fn.New()
@@ -286,6 +315,8 @@ func main() {
 	})
 
 	router.POST("/generate", func(c *gin.Context) {
+        
+		
 		//Parse form data
 		var data PrivacyPolicy
 		if err := c.ShouldBind(&data); err != nil {
@@ -381,8 +412,7 @@ func main() {
 			selectedPolicyType: template.HTML(renderTemplate(loadTemplate(selectedPolicyType, selectedPolicyType+".tmpl"), retrievedPolicy)),
 		}
 		
-
-
+       
 		c.HTML(http.StatusOK, "generated_policy.tmpl", gin.H{
 			"SelectedPolicy": selectedPolicyType,
 			"PolicyContent": template.HTML(renderedPolicies[selectedPolicyType]),
