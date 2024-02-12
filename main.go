@@ -324,9 +324,7 @@ func main() {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Error executing template file"})
 			return
 		}
-		// Return the rendered template in the response
-		//c.Header("Content-Type", "text/html")
-		//c.String(http.StatusOK, renderedTemplate.String())
+
 		redirectURL := fmt.Sprintf("/%s", policyID)
 		c.Redirect(http.StatusFound, redirectURL)
 	})
@@ -343,7 +341,7 @@ func main() {
 			return
 		}
 
-		//Return the Polic content in the response
+		//Return the Policy content in the response
 		c.JSON(http.StatusOK, gin.H{"policyContent": policyContent})
 	})
 
@@ -484,7 +482,7 @@ func renderTemplate(tmpl *template.Template, data PrivacyPolicy) string {
 		log.Fatal(err)
 	}
 	resultString := result.String()
-	//log.Printf("Generated HTML: %v", resultString)
+	
 	return resultString
 }
 
