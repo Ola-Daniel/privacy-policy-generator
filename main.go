@@ -151,12 +151,13 @@ func main() {
 
 	router.GET("/", func(c *gin.Context) {
           
-		//cookie, err := c.Cookie("user")
+		//cookie, err := c.Cookie("session-cookie")
+		//userID := uuid.New().String()
 
 		//if err != nil || cookie == "" {
 			//cookie = "NotSet"
 			//log.Println("Setting Cookie..........")
-			//c.SetCookie("user", "John Doe", 3600, "/", "localhost", false, false)
+			//c.SetCookie("session-cookie", userID, 3600, "/", "localhost", false, false)
 			//cookie := http.Cookie{Name: "locality", Value: "here", Expires: time.Now().Add(time.Hour), HttpOnly: true, MaxAge: 50000, Path: "/"}
 			//log.Println("Setting Completed!")
             //cookie = "John Doe"
@@ -167,7 +168,7 @@ func main() {
 		//	c.String(http.StatusNotFound, "Cookie not found")
 		
 		//fmt.Printf("Cookie value: %s \n", cookie)
-        //log.Println("Cookie value:", cookie)
+       // log.Println("Cookie value:", cookie)
 
 
 	    c.HTML(http.StatusOK, "index.tmpl", nil)
@@ -229,6 +230,42 @@ func main() {
 	
     })
 
+	router.GET("/:policyID", func(c *gin.Context) {
+		// Retrieve the policy ID from the URL parameter
+		policyID := c.Param("policyID")
+
+		//check if the policy ID exists in the map
+		policyContent, ok := generatedPolicies[policyID]
+		if !ok {
+			c.JSON(http.StatusNotFound, gin.H{"error": "Policy not found"})
+			return
+		}
+
+		//Render the template with the policy content
+		tmplData := gin.H{
+			"SelectedPolicy": "", // You may populate this if needed
+			"PolicyContent":  policyContent,
+			"LastInsertID":   "", // You may populate this if needed
+		}
+		renderedTemplate := bytes.NewBufferString("")
+		tmpl, err := template.New("linked_policy.tmpl").ParseFiles("templates/linked_policy.tmpl")
+		if err != nil {
+			log.Println("Error parsing template:", err)
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Error parsing template file"})
+			return
+		}
+		err = tmpl.Execute(renderedTemplate, tmplData)
+		if err != nil {
+			log.Println("Error executing template:", err)
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Error executing template file"})
+			return
+		}
+
+		//Set the appropriate headers and return the rendered template
+		c.Header("Content-Type", "text/html")
+		c.String(http.StatusOK, renderedTemplate.String())
+	})
+
 
 	router.GET("/get-link", func(c *gin.Context) {
 		//Retrieve query parameters
@@ -264,7 +301,7 @@ func main() {
         //Generate a unique identifier for the policy
 		policyID := uuid.New().String()
 		//Store the generated policy content with its unique identifier
-	    generatedPolicies[policyID] = "Generated your privacy policy content here...."
+	    generatedPolicies[policyID] = policyContent
 
 
 		//Generate the link to access the policy content
@@ -294,8 +331,10 @@ func main() {
 			return
 		}
 		// Return the rendered template in the response
-		c.Header("Content-Type", "text/html")
-		c.String(http.StatusOK, renderedTemplate.String())
+		//c.Header("Content-Type", "text/html")
+		//c.String(http.StatusOK, renderedTemplate.String())
+		redirectURL := fmt.Sprintf("/%s", policyID)
+		c.Redirect(http.StatusFound, redirectURL)
 	})
 
 
