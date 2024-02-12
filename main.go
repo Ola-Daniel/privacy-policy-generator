@@ -294,7 +294,7 @@ func main() {
 			return
 		}
 
-		//log.Println("Policy Content is:", policyContent)
+
 
 
 
@@ -304,12 +304,6 @@ func main() {
 	    generatedPolicies[policyID] = policyContent
 
 
-		//Generate the link to access the policy content
-		//policyLink := fmt.Sprintf("/view-policy?id=%s", policyID)
-
-		//return the link in the response
-
-		//c.JSON(http.StatusOK, gin.H{"policyLink": policyLink})
 
 		tmplData := gin.H{
 			"SelectedPolicy": selectedPolicyType,
