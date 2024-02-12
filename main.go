@@ -59,8 +59,7 @@ const (
 	dbDriver   = "mysql"
 )
 
-//shared variable to store lastInsertID
-//var lastInsertID int
+
 
 // Create the "privacy_policies" table if it doesn't exist
 
