@@ -95,6 +95,8 @@ const (
 NDPRFileName = "ndpr.tmpl"
 GDPRFileName = "gdpr.tmpl"
 CCPAFileName = "ccpa.tmpl"
+NDPAFileName = "ndpa.tmpl"
+POPIAFileName = "popia.tmpl"
 )
 
 
