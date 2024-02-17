@@ -99,9 +99,10 @@ Author
 Daniel Ola-Olorun
 
 
-- Email:  redacted 
 
 - Github: https://github.com/Ola-Daniel/
+
+- Twitter: https://twitter.com/horla_dan  
 
 - Website: https://danieloo.com 
 
