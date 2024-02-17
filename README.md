@@ -62,7 +62,7 @@ Roadmap
 - [x] GDPR 
 - [x] NDPR 
 - [x] CCPA 
-- [ ] POPIA
+- [x] POPIA
 - [x] Ghana Data Protection Act 
 - [ ] View/Download PDF 
 - [ ] Get Custom link   
