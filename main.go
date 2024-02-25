@@ -12,6 +12,7 @@ import (
 	"strings"
 	"context"
 	"regexp"
+	"time"
     
 	openai "github.com/sashabaranov/go-openai"
 	"github.com/gin-contrib/cors"
@@ -151,25 +152,7 @@ func main() {
 	router.StaticFile("favicon.ico", "./favicon.ico" )
 
 	router.GET("/", func(c *gin.Context) {
-          
-		//cookie, err := c.Cookie("session-cookie")
-		//userID := uuid.New().String()
 
-		//if err != nil || cookie == "" {
-			//cookie = "NotSet"
-			//log.Println("Setting Cookie..........")
-			//c.SetCookie("session-cookie", userID, 3600, "/", "localhost", false, false)
-			//cookie := http.Cookie{Name: "locality", Value: "here", Expires: time.Now().Add(time.Hour), HttpOnly: true, MaxAge: 50000, Path: "/"}
-			//log.Println("Setting Completed!")
-            //cookie = "John Doe"
-			 //}
-		 //set cookie
-		//c.String(http.StatusOK, "Cookie has been set")
-		//log.Println("Error retrieving cookie:", err)
-		//	c.String(http.StatusNotFound, "Cookie not found")
-		
-		//fmt.Printf("Cookie value: %s \n", cookie)
-       // log.Println("Cookie value:", cookie)
 
 
 	    c.HTML(http.StatusOK, "index.tmpl", nil)
@@ -234,6 +217,13 @@ func main() {
 	router.GET("/:policyID", func(c *gin.Context) {
 		// Retrieve the policy ID from the URL parameter
 		policyID := c.Param("policyID")
+		selectedPolicyType := c.Query("policyType")
+
+
+		if selectedPolicyType == "" || policyID == "" {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Policy type and PolicyID are required"})
+			return
+		}
 
 		//check if the policy ID exists in the map
 		policyContent, ok := generatedPolicies[policyID]
@@ -244,7 +234,7 @@ func main() {
 
 		//Render the template with the policy content
 		tmplData := gin.H{
-			"SelectedPolicy": "", // You may populate this if needed
+			"SelectedPolicy": selectedPolicyType, // You may populate this if needed
 			"PolicyContent":  policyContent,
 			"LastInsertID":   "", // You may populate this if needed
 		}
@@ -401,9 +391,11 @@ func main() {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
+		today := time.Now()
+		currentDate := today.Format("Jan 2, 2006")
         //create prompt
-        prompt := fmt.Sprintf("Generate a custom %s compliant privacy policy for my company, %s.\n\nCompany Name: %s\nEmail: %s\nWebsite: %s\nCountry: %s\nRegistration Number: %s\nAddress: %s",
-		selectedPolicyType, data.CompanyName, data.CompanyName, data.Email, data.Website, data.Country, data.RegistrationNumber, data.Address)
+        prompt := fmt.Sprintf("Generate a custom %s compliant privacy policy for my company, %s.\n\nCompany Name: %s\nEmail: %s\nWebsite: %s\nCountry: %s\nRegistration Number: %s\nAddress: %s\nDate: %s",
+		selectedPolicyType, data.CompanyName, data.CompanyName, data.Email, data.Website, data.Country, data.RegistrationNumber, data.Address, currentDate)
 		
             //initialize OpenAI client
 	    client := openai.NewClient(os.Getenv("OPENAI_KEY"))
@@ -421,7 +413,7 @@ func main() {
 	   )
 	    if err != nil {
 		    fmt.Printf("ChatCompletion error: %v\n", err)
-		    c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		    c.JSON(http.StatusInternalServerError, gin.H{"error": "Error Generating Privacy Policy, Contact Support"})
 		    return
 	    }
 	    openaiContent := resp.Choices[0].Message.Content
