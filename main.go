@@ -394,7 +394,7 @@ func main() {
 		today := time.Now()
 		currentDate := today.Format("Jan 2, 2006")
         //create prompt
-        prompt := fmt.Sprintf("Generate a custom %s compliant privacy policy for my company, %s.\n\nCompany Name: %s\nEmail: %s\nWebsite: %s\nCountry: %s\nRegistration Number: %s\nAddress: %s\nDate: %s",
+        prompt := fmt.Sprintf("Generate a custom %s compliant privacy policy for my company, %s.\n\nCompany Name: %s\nEmail: %s\nWebsite: %s\nCountry: %s\nRegistration Number: %s\nAddress: %s\nDate: %s \n The output should be limited to a minimum of 1000 words and maximum of 2000 words",
 		selectedPolicyType, data.CompanyName, data.CompanyName, data.Email, data.Website, data.Country, data.RegistrationNumber, data.Address, currentDate)
 		
             //initialize OpenAI client
