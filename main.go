@@ -316,7 +316,7 @@ func main() {
 			return
 		}
 
-		redirectURL := fmt.Sprintf("/%s", policyID)
+		redirectURL := fmt.Sprintf("/%s?policyType=%s", policyID, selectedPolicyType)
 		c.Redirect(http.StatusFound, redirectURL)
 	})
 
