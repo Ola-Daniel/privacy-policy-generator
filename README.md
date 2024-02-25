@@ -64,8 +64,8 @@ Roadmap
 - [x] CCPA 
 - [x] POPIA
 - [x] Ghana Data Protection Act 
-- [ ] View/Download PDF 
-- [ ] Get Custom link   
+- [x] View/Download PDF 
+- [] Get Custom link   
 
 
 Contribute
