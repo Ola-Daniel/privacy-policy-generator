@@ -65,7 +65,7 @@ Roadmap
 - [x] POPIA
 - [x] Ghana Data Protection Act 
 - [x] View/Download PDF 
-- [] Get Custom link   
+- [ ] Get Custom link   
 
 
 Contribute
