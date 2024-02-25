@@ -399,6 +399,9 @@ func main() {
 		
             //initialize OpenAI client
 	    client := openai.NewClient(os.Getenv("OPENAI_KEY"))
+
+
+	for {
 	    resp, err := client.CreateChatCompletion(
 		    context.Background(),
 		    openai.ChatCompletionRequest{
@@ -419,6 +422,12 @@ func main() {
 	    openaiContent := resp.Choices[0].Message.Content
 
 		//log.Printf("Generated Policy: %v", openaiContent)
+
+		words := strings.Fields(openaiContent)
+		if len(words) < 800 {
+			//Rerun chat completion with a new prompt
+			continue
+		}
 		
 		log.Printf("lastInsertID: %v", lastInsertID)
 
@@ -443,6 +452,8 @@ func main() {
 			"OpenAIContent": openaiContent, // add OpenAI content to the response
 			"LastInsertID": lastInsertID,
 		})
+		return
+	}
 
 
 	})
