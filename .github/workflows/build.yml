@@ -81,6 +81,27 @@ jobs:
           git tag -a ${{ steps.version.outputs.version }} -m "Release ${{ steps.version.outputs.version }}"
           git push origin ${{ steps.version.outputs.version }}
 
+      - name: Build Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          platforms: linux/amd64
+          load: true
+          tags: |
+            doolaa/policygenerator:${{ steps.version.outputs.version }}
+            doolaa/policygenerator:latest
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: 'doolaa/policygenerator:${{ steps.version.outputs.version }}'
+          format: 'table'
+          exit-code: '1'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'CRITICAL,HIGH'
+
+      
       - name: Push Docker image
         uses: docker/build-push-action@v5
         with:
